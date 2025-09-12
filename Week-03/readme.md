@@ -24,7 +24,7 @@ void main(){
 Silakan coba eksekusi (Run) kode pada langkah 1 tersebut. Apa yang terjadi? Jelaskan!
 - Jawab: tidak bisa, karena penulisan else if nya salah seharusnya menggunakan awalan kecil
 ### Screenshot: <br>
-![](/2341720237-Mobile-SEM-5/Week-03/img/P1L2.png)
+![](./img/P1L2.png)
 
 ### Langkah 3:
 Tambahkan kode program berikut, lalu coba eksekusi (Run) kode Anda.
@@ -49,7 +49,7 @@ bool test3 = true;
   }
 ```
 ### Screenshot: <br>
-![](/2341720237-Mobile-SEM-5/Week-03/img/P1L3.png)
+![](./img/P1L3.png)
 -
 # Praktikum 2: Menerapkan Perulangan "while" dan "do-while"
 
@@ -93,7 +93,7 @@ do {
 
 - Jawab: Tidak terdapat error, program tetap menjalankan perulangan sampai angka 76.
 ### Screnshoot:
-![](/2341720237-Mobile-SEM-5/Week-03/img/P2L3.png)
+![](./img/P2L3.png)
 
 # Praktikum 3 Menerapkan Perulangan "for" dan "break-continue"
 
@@ -117,7 +117,7 @@ void main() {
 }
 ```
 ### Screnschoot:
-![](/2341720237-Mobile-SEM-5/Week-03/img/P3L2.png)
+![](./img/P3L2.png)
 
 ### Langkah 3:
 Tambahkan kode program berikut di dalam for-loop, lalu coba eksekusi (Run) kode Anda.
@@ -129,7 +129,7 @@ print(index);
 - Apa yang terjadi ? Jika terjadi error, silakan perbaiki namun tetap menggunakan for dan break-continue.
 - Jawab: program tetap berjalan dan looping sebanyak 17 tetapi terdapat if untuk berhenti di 21 dan tidak menampilkan output karena perintah print dibawah continue;
 ### Screenshoot: 
-![](/2341720237-Mobile-SEM-5/Week-03/img/P3L3.png)
+![](./img/P3L3.png)
 
 # Tugas Praktikum
 1. Silakan selesaikan Praktikum 1 sampai 3, lalu dokumentasikan berupa screenshot hasil pekerjaan beserta penjelasannya!
@@ -153,7 +153,7 @@ void main() {
 }
 ```
 ### Screenshoot:
-![](/2341720237-Mobile-SEM-5/Week-03/img/PraktikumSoal2.png)
+![](./img/PraktikumSoal2.png)
 
 
 3. Kumpulkan berupa link commit repo GitHub pada tautan yang telah disediakan di grup Telegram!
