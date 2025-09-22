@@ -415,6 +415,24 @@ Tambahkan kode program berikut di luar scope void main(), lalu coba eksekusi (Ru
 
 Apa yang terjadi ? Jika terjadi error, silakan perbaiki. Gunakan fungsi tukar() di dalam main() sehingga tampak jelas proses pertukaran value field di dalam Records.
 
+#### Jawab:
+
+- tidak muncul apapun, karena fungsi tukar tidak dipanggil
+- membuat var baru untuk menggunakan fungsi tukar
+
+```dart
+  print("----------langkah 3----------");
+  var sebelum = (1, 2);
+  var sesudah = tukar(sebelum);
+
+  print("sebelum: $sebelum");
+  print("sesudah: $sesudah");
+```
+
+#### Screenshot:
+
+![](./img/P5L3.png)
+
 ### Langkah 4:
 
 Tambahkan kode program berikut di dalam scope void main(), lalu coba eksekusi (Run) kode Anda.
@@ -426,6 +444,19 @@ print(mahasiswa);
 ```
 
 Apa yang terjadi ? Jika terjadi error, silakan perbaiki. Inisialisasi field nama dan NIM Anda pada variabel record mahasiswa di atas. Dokumentasikan hasilnya dan buat laporannya!
+
+#### Jawab:
+
+- terjadi error karena deklarasi var tidak memakai nullSafety sehingga terjadi error, untuk mengatasinya bisa pakai nullSafety atau juga ditambahkan inisiasi
+
+```dart
+  (String, int)? mahasiswa = ('Nur aziz', 2341720237);
+  print(mahasiswa);
+```
+
+#### Screenshot:
+
+![](./img/P5L4.png)
 
 ### Langkah 5:
 
@@ -442,14 +473,198 @@ print(mahasiswa2.$2); // Prints 'last'
 
 Apa yang terjadi ? Jika terjadi error, silakan perbaiki. Gantilah salah satu isi record dengan nama dan NIM Anda, lalu dokumentasikan hasilnya dan buat laporannya!
 
+#### jawab:
+
+- menampilkan output dari mahasiswa2 dengan mengambil value tertentu
+
+#### Screenshot:
+
+![](./img/P5L5a.png)
+
+- dengan nama dan nim
+
+![](./img/P5L5b.png)
+
 ## 2. Jelaskan yang dimaksud Functions dalam bahasa Dart!
+
+- Function dalam Dart adalah blok kode yang dapat dipanggil berulang-ulang dengan nama dan tugas tertentu, dan dapat menerima parameter serta mengembalikan nilai.
+
+```dart
+void sayHello(String name) {
+  print('Hello $name');
+}
+
+void main() {
+  sayHello('Nur Aziz');
+}
+```
 
 ## 3. Jelaskan jenis-jenis parameter di Functions beserta contoh sintaksnya!
 
+- 1. Positional Parameter (Wajib diisi sesuai urutan)
+
+```dart
+void greet(String name, int age) {
+  print("Hello $name, umur kamu $age tahun");
+}
+
+void main() {
+  greet("aziz", 22); // harus urut
+}
+```
+
+- 2. Optional Positional Parameter (ditandai dengan [])
+
+```dart
+void greet(String name, [int? age]) {
+  print("Hello $name, umur: ${age ?? "tidak diketahui"}");
+}
+
+void main() {
+  greet("aziz");       // tanpa age
+  greet("aziz", 22);   // dengan age
+}
+```
+
+- 3. Named Parameter (pakai {} dan biasanya diberi required)
+
+```dart
+void greet({required String name, int? age}) {
+  print("Hello $name, umur: ${age ?? "tidak diketahui"}");
+}
+
+void main() {
+  greet(name: "aziz", age: 22);
+  greet(name: "aziz"); // age opsional
+}
+```
+
+- 4. Default Parameter Value
+
+```dart
+void greet({String name = "Anonim", int age = 0}) {
+  print("Hello $name, umur $age tahun");
+}
+
+void main() {
+  greet(); // Hello Anonim, umur 0 tahun
+  greet(name: "Stephen", age: 22);
+}
+```
+
 ## 4. Jelaskan maksud Functions sebagai first-class objects beserta contoh sintaknya!
+
+- Function di Dart diperlakukan sama seperti data lain (String, int, dsb) yang berarti:
+- disimpan di variabel
+- dikirim sebagai parameter
+- dikembalikan dari function lain.
+
+```dart
+void sayHello(String name) {
+  print("Hello $name");
+}
+
+void main() {
+  // simpan function ke variabel
+  var greet = sayHello;
+  greet("Stephen"); // Hello Stephen
+
+  // kirim function ke parameter
+  void execute(Function f) {
+    f("Aziz");
+  }
+
+  execute(sayHello); // Hello Aziz
+}
+```
 
 ## 5. Apa itu Anonymous Functions? Jelaskan dan berikan contohnya!
 
+- Function tanpa nama (biasanya dipakai cepat, sekali jalan).
+
+```dart
+void main() {
+  // Anonymous function langsung dipanggil
+  var numbers = [1, 2, 3];
+
+  numbers.forEach((n) {
+    print(n * 2); // 2, 4, 6
+  });
+
+  // Versi arrow function
+  numbers.forEach((n) => print(n * n)); // 1, 4, 9
+}
+
+```
+
 ## 6. Jelaskan perbedaan Lexical scope dan Lexical closures! Berikan contohnya!
 
+- Lexical Scope
+- Scope ditentukan dari posisi kode (bukan runtime).
+- Function hanya bisa akses variabel yang ada di dalam scope-nya.
+
+```dart
+void main() {
+  var a = 10;
+
+  void printA() {
+    print(a); // bisa akses 'a' karena dalam lexical scope
+  }
+
+  printA(); // 10
+}
+
+```
+
+- Lexical Closures
+- Closure = function menyimpan dan “membawa” variabel dari scope luar, meski scope asal sudah selesai.
+
+```dart
+Function makeCounter() {
+  var count = 0;
+
+  return () {
+    count++;
+    return count;
+  };
+}
+
+void main() {
+  var counter = makeCounter();
+
+  print(counter()); // 1
+  print(counter()); // 2
+  print(counter()); // 3
+}
+
+```
+
 ## 7. Jelaskan dengan contoh cara membuat return multiple value di Functions!
+
+- Pakai List
+
+```dart
+List<int> getCoordinates() {
+  return [10, 20];
+}
+
+void main() {
+  var coords = getCoordinates();
+  print("x=${coords[0]}, y=${coords[1]}"); // x=10, y=20
+}
+
+```
+
+- Pakai Map
+
+```dart
+Map<String, int> getCoordinates() {
+  return {"x": 10, "y": 20};
+}
+
+void main() {
+  var coords = getCoordinates();
+  print("x=${coords['x']}, y=${coords['y']}"); // x=10, y=20
+}
+
+```
