@@ -7,7 +7,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(title: const Text("Contoh TextField")),
+        appBar: AppBar(
+          title: const Text("Muhammad Nur Aziz | 2341720237 | TextField"),
+        ),
         body: const TextField(
           obscureText: false,
           decoration: InputDecoration(

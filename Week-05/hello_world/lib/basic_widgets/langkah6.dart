@@ -10,7 +10,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       title: 'Contoh Date Picker',
-      home: MyHomePage(title: 'Contoh Date Picker'),
+      home: MyHomePage(title: 'Muhammad Nur Aziz Date Picker'),
     );
   }
 }
