@@ -87,3 +87,10 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+  assets:
+    - assets/images/bread.jpg
+    - assets/images/egg.jpg
+    - assets/images/rice.jpg
+    - assets/images/salt.jpg
+    - assets/images/sugar.jpg
+    - assets/images/milk.jpg
