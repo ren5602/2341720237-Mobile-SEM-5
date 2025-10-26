@@ -199,6 +199,9 @@ runApp(
             print(e);
           }
 ```
+### Hasil
+![P1](./img/P1_1.jpg)
+![P12](./img/P1_2.jpg)
 ### Praktikum 2: Membuat photo filter carousel
 
 ### Langkah 1: Buat project baru
@@ -555,14 +558,18 @@ void main() {
   );
 }
 ```
-
+### Hasil
+![P2](./img/P2.gif)
 ## 2. Gabungkan hasil praktikum 1 dengan hasil praktikum 2 sehingga setelah melakukan pengambilan foto, dapat dibuat filter carouselnya!
-
+### Hasil
+![T2](./img/T2.gif)
 
 ## 3. Jelaskan maksud void async pada praktikum 1?
-
+- Async berarti fungsi berjalan secara asynchronous, jadi bisa menunggu proses lama tanpa membuat UI macet. Sedangkan void artinya fungsi tidak mengembalikan nilai.
 
 ## 4. Jelaskan fungsi dari anotasi @immutable dan @override ?
+- @immutable berarti semua field dalam class bersifat final, jadi setelah objek dibuat, nilainya tidak bisa diubah lagi. Ini membantu Flutter mengenali bahwa widget tersebut tetap (frozen), sehingga proses build bisa lebih cepat dan efisien.
 
+- @override digunakan saat menimpa method atau property dari class induk. Anotasi ini berguna untuk mencegah kesalahan penulisan dan memastikan bahwa kita benar-benar meng-override elemen yang sudah ada.
 
 ## 5. Kumpulkan link commit repository GitHub Anda kepada dosen yang telah disepakati!
