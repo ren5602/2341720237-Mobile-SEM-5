@@ -453,8 +453,70 @@ ketika kita mengklik floating button akan menambahkan formlist, kemudian ketika 
 
 ## 1. Selesaikan langkah-langkah praktikum tersebut, lalu dokumentasikan berupa GIF hasil akhir praktikum beserta penjelasannya di file README.md! Jika Anda menemukan ada yang error atau tidak berjalan dengan baik, silakan diperbaiki sesuai dengan tujuan aplikasi tersebut dibuat.
 
+### Langkah 1: Edit PlanProvider
+
+Perhatikan kode berikut, edit class PlanProvider sehingga dapat menangani List Plan.
+
+### Langkah 2: Edit main.dart
+
+Langkah sebelumnya dapat menyebabkan error pada main.dart dan plan_screen.dart. Pada method build, gantilah menjadi kode seperti ini.
+
+### Langkah 3: Edit plan_screen.dart
+
+Tambahkan variabel plan dan atribut pada constructor-nya seperti berikut.
+
+### Langkah 4: Error
+
+Itu akan terjadi error setiap kali memanggil PlanProvider.of(context). Itu terjadi karena screen saat ini hanya menerima tugas-tugas untuk satu kelompok Plan, tapi sekarang PlanProvider menjadi list dari objek plan tersebut.
+
+### Langkah 5: Tambah getter Plan
+
+Tambahkan getter pada \_PlanScreenState seperti kode berikut.
+
+### Langkah 6: Method initState()
+
+Pada bagian ini kode tetap seperti berikut.
+
+### Langkah 7: Widget build
+
+Pastikan Anda telah merubah ke List dan mengubah nilai pada currentPlan seperti kode berikut ini.
+
+### Langkah 8: Edit \_buildTaskTile
+
+Pastikan ubah ke List dan variabel planNotifier seperti kode berikut ini.
+
+### Langkah 9: Buat screen baru
+
+Pada folder view, buatlah file baru dengan nama plan_creator_screen.dart dan deklarasikan dengan StatefulWidget bernama PlanCreatorScreen. Gantilah di main.dart pada atribut home menjadi seperti berikut.
+
+### Langkah 10: Pindah ke class \_PlanCreatorScreenState
+
+Kita perlu tambahkan variabel TextEditingController sehingga bisa membuat TextField sederhana untuk menambah Plan baru. Jangan lupa tambahkan dispose ketika widget unmounted seperti kode berikut.
+
+### Langkah 11: Pindah ke method build
+
+Letakkan method Widget build berikut di atas void dispose. Gantilah ‘Namaku' dengan nama panggilan Anda.
+
+### Langkah 12: Buat widget \_buildListCreator
+
+Buatlah widget berikut setelah widget build.
+
+### Langkah 13: Buat void addPlan()
+
+Tambahkan method berikut untuk menerima inputan dari user berupa text plan.
+
+### Langkah 14: Buat widget \_buildMasterPlans()
+
+Tambahkan widget seperti kode berikut.
+Terakhir, run atau tekan F5 untuk melihat hasilnya jika memang belum running. Bisa juga lakukan hot restart jika aplikasi sudah running. Maka hasilnya akan seperti gambar berikut ini.
+
 ## 2. Berdasarkan Praktikum 3 yang telah Anda lakukan, jelaskan maksud dari gambar diagram berikut ini!
 
+- Diagram tersebut menggambarkan alur navigasi dan pengelolaan state pada aplikasi Master Plan. Pada layar awal (PlanCreatorScreen), pengguna bisa menambah serta melihat daftar rencana melalui TextField dan ListView. Ketika salah satu rencana dipilih, aplikasi berpindah ke layar detail (PlanScreen) menggunakan Navigator.push untuk menampilkan daftar tugas dan progres penyelesaiannya. Data dari kedua layar tetap tersinkron karena semua state dikelola oleh PlanProvider (InheritedWidget) yang ditempatkan di level atas aplikasi, yang dimana menerapkan konsep Lift State Up agar state dapat diakses lintas layar.
+
 ## 3. Lakukan capture hasil dari Langkah 14 berupa GIF, kemudian jelaskan apa yang telah Anda buat!
+
+![p3hasil](./img/P3Hasil.gif)
+- Pada langkah tersebut, aplikasi Master Plan menggunakan manajemen state dengan InheritedNotifier (PlanProvider). Jadi pengguna menambah atau menyelesaikan tugas, data pada model akan otomatis diperbarui dan langsung tercermin pada tampilan aplikasi secara real-time tanpa perlu melakukan refresh manual.
 
 ## 4. Kumpulkan laporan praktikum Anda berupa link commit atau repository GitHub ke dosen yang telah disepakati !
