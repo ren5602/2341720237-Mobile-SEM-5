@@ -200,3 +200,100 @@ Akhirnya, run atau tekan F5 jika aplikasi belum running. Maka Anda akan melihat 
 - Capture hasil praktikum Anda berupa GIF dan lampirkan di README. Lalu lakukan commit dengan pesan "W11: Soal 4".
 
   ![p2soal4](./img/P1Soal4.gif)
+
+# Praktikum 3: Menggunakan Completer di Future
+
+## Langkah 1: Buka main.dart
+
+Pastikan telah impor package async berikut.
+
+```dart
+import 'package:async/async.dart';
+```
+
+## Langkah 2: Tambahkan variabel dan method
+
+Tambahkan variabel late dan method di class \_FuturePageState seperti ini.
+
+```dart
+late Completer completer;
+
+Future getNumber() {
+  completer = Completer<int>();
+  calculate();
+  return completer.future;
+}
+
+Future calculate() async {
+  await Future.delayed(const Duration(seconds: 5));
+  completer.complete(42);
+}
+```
+
+## Langkah 3: Ganti isi kode onPressed()
+
+Tambahkan kode berikut pada fungsi onPressed(). Kode sebelumnya bisa Anda comment.
+
+```dart
+getNumber().then((value) {
+  setState(() {
+    result = value.toString();
+  });
+});
+```
+
+## Langkah 4:
+
+Terakhir, run atau tekan F5 untuk melihat hasilnya jika memang belum running. Bisa juga lakukan hot restart jika aplikasi sudah running. Maka hasilnya akan seperti gambar berikut ini. Setelah 5 detik, maka angka 42 akan tampil.
+
+![p3l4](./img/P3L4.gif)
+
+### Soal 5
+
+- Jelaskan maksud kode langkah 2 tersebut!
+  - late Completer completer; Menyediakan tempat yang nanti akan men-complete sebuah Future.
+  - getNumber()
+    Membuat instance Completer baru. Langsung memanggil calculate() (tanpa await), jadi tidak menunggu 5 detik. Langsung mengembalikan completer.future ke pemanggil. Pemanggil langsung mendapat Future yang belum selesai; nilai akan datang nanti.
+  - calculate()
+    Menunggu 5 detik. kemudian memanggil completer.complete(42). Saat itulah Future yang dikembalikan getNumber() selesai dengan nilai 42.
+
+Capture hasil praktikum Anda berupa GIF dan lampirkan di README. Lalu lakukan commit dengan pesan "W11: Soal 5".
+
+## Langkah 5: Ganti method calculate()
+
+Gantilah isi code method calculate() seperti kode berikut, atau Anda dapat membuat calculate2()
+
+```dart
+Future calculate() async {
+  try {
+    await Future.delayed(const Duration(seconds: 5));
+    completer.complete(42);
+  } catch (e) {
+    completer.completeError(e);
+  }
+}
+```
+
+## Langkah 6: Pindah ke onPressed()
+
+Ganti menjadi kode seperti berikut.
+
+```dart
+getNumber()
+.then((value) {
+  setState(() {
+    result = value.toString();
+  });
+})
+.catchError((e) {
+  result = 'An error occurred';
+});
+```
+
+### Soal 6
+
+- Jelaskan maksud perbedaan kode langkah 2 dengan langkah 5-6 tersebut!
+  - Perbedaanya pada kode langkah 5-6 adalah dapat menghandle jika terjadi error udah
+- Capture hasil praktikum Anda berupa GIF dan lampirkan di README. Lalu lakukan commit dengan pesan "W11: Soal 6".
+
+![p3l4](./img/P3L4.gif)
