@@ -297,3 +297,69 @@ getNumber()
 - Capture hasil praktikum Anda berupa GIF dan lampirkan di README. Lalu lakukan commit dengan pesan "W11: Soal 6".
 
 ![p3l4](./img/P3L4.gif)
+
+# Praktikum 4: Memanggil Future secara paralel
+
+FutureGroup tersedia di package async, yang mana itu harus diimpor ke file dart Anda, seperti berikut.
+
+`import 'package:async/async.dart';`
+
+## Langkah 1: Buka file main.dart
+
+Tambahkan method ini ke dalam class \_FuturePageState
+
+```dart
+Future returnFG() async {
+  FutureGroup<int> futureGroup = FutureGroup<int>();
+  futureGroup.add(returnOneAsync());
+  futureGroup.add(returnTwoAsync());
+  futureGroup.add(returnThreeAsync());
+  futureGroup.close();
+  final futures = await futureGroup.future;
+  int total = 0;
+  for (var num in futures) {
+    total += num;
+  }
+  setState(() {
+    result = total.toString();
+  });
+}
+```
+
+## Langkah 2: Edit onPressed()
+
+Anda bisa hapus atau comment kode sebelumnya, kemudian panggil method dari langkah 1 tersebut.
+
+```dart
+ElevatedButton(
+            onPressed: () {
+              returnFG();
+              // getNumber()
+```
+
+## Langkah 3: Run
+
+Anda akan melihat hasilnya dalam 3 detik berupa angka 6 lebih cepat dibandingkan praktikum sebelumnya menunggu sampai 9 detik.
+
+### Soal 7
+
+Capture hasil praktikum Anda berupa GIF dan lampirkan di README. Lalu lakukan commit dengan pesan "W11: Soal 7".
+![p4s7](./img/P4Soal7.gif)
+
+## Langkah 4: Ganti variabel futureGroup
+
+Anda dapat menggunakan FutureGroup dengan Future.wait seperti kode berikut.
+
+```dart
+final futures = Future.wait<int>([
+  returnOneAsync(),
+  returnTwoAsync(),
+  returnThreeAsync(),
+]);
+```
+
+### Soal 8
+
+Jelaskan maksud perbedaan kode langkah 1 dan 4!
+- Future.wait: digunakan jika sudah tahu semua Future sejak awal, dan ingin cara yang lebih ringkas dan efisien.
+- FutureGroup: digunakan untuk mengelola Future secara dinamis (misalnya dalam loop atau kondisi tertentu).
