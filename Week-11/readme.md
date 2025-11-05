@@ -702,6 +702,57 @@ Tambahkan method ini.
 
 Buat file baru ini di project lib Anda. Silakan jika ingin mengelompokkan view menjadi satu folder dan sesuaikan impor yang dibutuhkan.
 
+## Langkah 5: Buat class NavigationSecond dengan StatefulWidget
+
+```dart
+import 'package:flutter/material.dart';
+
+class NavigationSecond extends StatefulWidget {
+  const NavigationSecond({super.key});
+
+  @override
+  State<NavigationSecond> createState() => _NavigationSecondState();
+}
+
+class _NavigationSecondState extends State<NavigationSecond> {
+  @override
+  Widget build(BuildContext context) {
+    Color color;
+    return Scaffold(
+      appBar: AppBar(title: const Text('Navigation Second Screen')),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            ElevatedButton(
+              child: const Text('Pink - 200'),
+              onPressed: () {
+                color = Colors.pink.shade200;
+                Navigator.pop(context, color);
+              },
+            ),
+            ElevatedButton(
+              child: const Text('purple - 200'),
+              onPressed: () {
+                color = Colors.purple.shade200;
+                Navigator.pop(context, color);
+              },
+            ),
+            ElevatedButton(
+              child: const Text('Blue - 200'),
+              onPressed: () {
+                color = Colors.blue.shade200;
+                Navigator.pop(context, color);
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+```
+
 ## Langkah 6: Edit main.dart
 
 Lakukan edit properti home.
@@ -711,9 +762,120 @@ Lakukan edit properti home.
 ### Soal 16
 
 - Cobalah klik setiap button, apa yang terjadi ? Mengapa demikian ?
+  - Saat menekan tombol 'Change Color' (Halaman 1): Aplikasi berpindah dari Halaman 1 (NavigationFirst) ke Halaman 2 (NavigationSecond).
+  - Saat menekan salah satu tombol warna (misal 'pink') (Halaman 2): Aplikasi kembali ke Halaman 1, dan warna latar belakang Halaman 1 berubah menjadi warna yang dipilih.
 - Gantilah 3 warna pada langkah 5 dengan warna favorit Anda!
+  - Colors.pink.shade200
+  - Colors.purple.shade200
+  - Colors.blue.shade200
 - Capture hasil praktikum Anda berupa GIF dan lampirkan di README. Lalu lakukan commit dengan pesan "W11: Soal 16".
 
 ![p8s16](./img/P8S16.gif)
 
+# Praktikum 9: Memanfaatkan async/await dengan Widget Dialog
 
+## Langkah 1: Buat file baru navigation_dialog.dart
+
+Buat file dart baru di folder lib project Anda.
+
+## Langkah 2: Isi kode navigation_dialog.dart
+
+```dart
+import 'package:flutter/material.dart';
+
+class NavigationDialogScreen extends StatefulWidget {
+  const NavigationDialogScreen({super.key});
+
+  @override
+  State<NavigationDialogScreen> createState() => _NavigationDialogScreenState();
+}
+
+class _NavigationDialogScreenState extends State<NavigationDialogScreen> {
+  Color color = Colors.blue.shade700;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: color,
+      appBar: AppBar(title: const Text('Navigation Dialog Screen - Aziz')),
+      body: Center(
+        child: ElevatedButton(
+          child: const Text('Change Color'),
+          onPressed: () {},
+        ),
+      ),
+    );
+  }
+}
+```
+
+## Langkah 3: Tambah method async
+
+```dart
+showColorDialog(BuildContext context) async {
+    await showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (_) {
+        return AlertDialog(
+          title: const Text('Very important question'),
+          content: const Text('Please choose a color'),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Pink - 200'),
+              onPressed: () {
+                color = Colors.pink.shade200;
+                Navigator.pop(context, color);
+              },
+            ),
+            TextButton(
+              child: const Text('purple - 200'),
+              onPressed: () {
+                color = Colors.purple.shade200;
+                Navigator.pop(context, color);
+              },
+            ),
+            TextButton(
+              child: const Text('Blue - 200'),
+              onPressed: () {
+                color = Colors.blue.shade200;
+                Navigator.pop(context, color);
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+```
+
+## Langkah 4: Panggil method di ElevatedButton
+
+```dart
+onPressed: () {
+  _showColorDialog(context).then((value) => setState(() {}));
+},
+```
+
+## Langkah 5: Edit main.dart
+
+Ubah properti home
+
+`home: const NavigationDialogScreen(),`
+
+## Langkah 6: Run
+
+Coba ganti warna background dengan widget dialog tersebut. Jika terjadi error, silakan diperbaiki. Jika berhasil, akan tampil seperti gambar berikut.
+
+### Soal 17
+
+- Cobalah klik setiap button, apa yang terjadi ? Mengapa demikian ?
+  - Saat menekan tombol 'Change Color': Sebuah AlertDialog (pop-up) muncul di atas halaman.
+  - Saat menekan salah satu pilihan warna misal 'pink': Dialog tertutup, dan warna latar belakang halaman berubah menjadi warna yang dipilih.
+- Gantilah 3 warna pada langkah 3 dengan warna favorit Anda!
+  - Colors.pink.shade200
+  - Colors.purple.shade200
+  - Colors.blue.shade200
+- Capture hasil praktikum Anda berupa GIF dan lampirkan di README. Lalu lakukan commit dengan pesan "W11: Soal 17".
+
+![p9s17](./img/P9S17.gif)
