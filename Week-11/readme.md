@@ -361,5 +361,77 @@ final futures = Future.wait<int>([
 ### Soal 8
 
 Jelaskan maksud perbedaan kode langkah 1 dan 4!
+
 - Future.wait: digunakan jika sudah tahu semua Future sejak awal, dan ingin cara yang lebih ringkas dan efisien.
 - FutureGroup: digunakan untuk mengelola Future secara dinamis (misalnya dalam loop atau kondisi tertentu).
+
+# Praktikum 5: Menangani Respon Error pada Async Code
+
+## Langkah 1: Buka file main.dart
+
+Tambahkan method ini ke dalam class \_FuturePageState
+
+```dart
+Future<int> returnError() async {
+  await Future.delayed(const Duration(seconds: 2));
+  throw Exception('Something terrible happened!');
+}
+```
+
+## Langkah 2: ElevatedButton
+
+Ganti dengan kode berikut
+
+```dart
+returnError()
+    .then((value) {
+      setState(() {
+        result = 'Success';
+      });
+    })
+    .catchError((onError) {
+      setState(() {
+        result = onError.toString();
+      });
+    })
+    .whenComplete(() => print('Complete'));
+```
+
+## Langkah 3: Run
+
+Lakukan run dan klik tombol GO! maka akan menghasilkan seperti gambar berikut.
+Pada bagian debug console akan melihat teks Complete seperti berikut.
+
+![p5l3](./img/P5L3.png)
+
+### Soal 9
+
+- Capture hasil praktikum Anda berupa GIF dan lampirkan di README. Lalu lakukan commit dengan pesan "W11: Soal 9".
+  ![p5s9](./img/P5Soal9.gif)
+
+## Langkah 4: Tambah method handleError()
+
+Tambahkan kode ini di dalam class \_FutureStatePage
+
+```dart
+Future handleError() async {
+    try {
+      await returnError();
+    } catch (e) {
+      setState(() {
+        result = e.toString();
+      });
+    } finally {
+      print('complete');
+    }
+  }
+```
+
+### Soal 10
+
+- Panggil method handleError() tersebut di ElevatedButton, lalu run. Apa hasilnya? Jelaskan perbedaan kode langkah 1 dan 4!
+  - Hasil langkah 4 dengan langkah satu sama saja hanya berbeda cara, yang membedakan hanyalah langkah 4 menambahkan method handlerError() kemudian dipanggil pada elevated.
+
+![p5s10](./img/P5Soal10.gif)
+
+
