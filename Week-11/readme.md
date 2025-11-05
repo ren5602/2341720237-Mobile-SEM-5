@@ -434,4 +434,124 @@ Future handleError() async {
 
 ![p5s10](./img/P5Soal10.gif)
 
+# Praktikum 6: Menggunakan Future dengan StatefulWidget
 
+## Langkah 1: install plugin geolocator
+
+Tambahkan plugin geolocator dengan mengetik perintah berikut di terminal.
+
+`flutter pub add geolocator`
+
+## Langkah 2: Tambah permission GPS
+
+Jika Anda menargetkan untuk platform Android, maka tambahkan baris kode berikut di file android/app/src/main/androidmanifest.xml
+
+`<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>`
+
+## Langkah 3: Buat file geolocation.dart
+
+Tambahkan file baru ini di folder lib project Anda.
+
+## Langkah 4: Buat StatefulWidget
+
+Buat class LocationScreen di dalam file geolocation.dart
+
+## Langkah 5: Isi kode geolocation.dart
+
+### Soal 11
+
+- Tambahkan nama panggilan Anda pada tiap properti title sebagai identitas pekerjaan Anda.
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
+
+class LocationScreen extends StatefulWidget {
+  const LocationScreen({super.key});
+
+  @override
+  State<LocationScreen> createState() => _LocationScreenState();
+}
+
+class _LocationScreenState extends State<LocationScreen> {
+  String myPosition = "";
+
+  @override
+  void initState() {
+    super.initState();
+    getPosition().then((Position myPos) {
+      myPosition =
+          'latitude: ${myPos.latitude.toString()} - Longitude: ${myPos.longitude.toString()}';
+      setState(() {
+        myPosition = myPosition;
+      });
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Current Location - Aziz')),
+      body: Center(child: Text(myPosition)),
+    );
+  }
+
+  Future<Position> getPosition() async {
+    await Geolocator.requestPermission();
+    await Geolocator.isLocationServiceEnabled();
+    Position? position = await Geolocator.getCurrentPosition();
+    return position;
+  }
+}
+```
+
+## Langkah 6: Edit main.dart
+
+Panggil screen baru tersebut di file main Anda seperti berikut.
+
+```dart
+home: LocationScreen(),
+```
+
+## Langkah 7: Run
+
+Run project Anda di device atau emulator (bukan browser), maka akan tampil seperti berikut ini.
+
+![p6l7](./img/P6L7.gif)
+
+## Langkah 8: Tambahkan animasi loading
+
+Tambahkan widget loading seperti kode berikut. Lalu hot restart, perhatikan perubahannya.
+
+```dart
+Widget build(BuildContext context) {
+    final myWidget = myPosition == ''
+        ? const CircularProgressIndicator()
+        : Text(myPosition);
+    return Scaffold(
+      appBar: AppBar(title: const Text('Current Location - Aziz')),
+      body: Center(child: myWidget),
+    );
+  }
+```
+
+### Soal 12
+
+- Jika Anda tidak melihat animasi loading tampil, kemungkinan itu berjalan sangat cepat. Tambahkan delay pada method getPosition() dengan kode await Future.delayed(const Duration(seconds: 3));
+
+```dart
+Future<Position> getPosition() async {
+  await Geolocator.requestPermission();
+  await Geolocator.isLocationServiceEnabled();
+  await Future.delayed(const Duration(seconds: 2));
+  Position? position = await Geolocator.getCurrentPosition();
+  return position;
+}
+```
+
+- Apakah Anda mendapatkan koordinat GPS ketika run di browser? Mengapa demikian?
+  - ya, saya mendapatkan koordinat gps ketika dirun dichrome
+- Capture hasil praktikum Anda berupa GIF dan lampirkan di README. Lalu lakukan commit dengan pesan "W11: Soal 12".
+
+![p6s12](./img/P6S12a.gif)
