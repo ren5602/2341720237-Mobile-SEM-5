@@ -622,10 +622,11 @@ Widget build(BuildContext context) {
 ### Soal 13
 
 - Apakah ada perbedaan UI dengan praktikum sebelumnya? Mengapa demikian?
-    - tidak ada bedanya pada bagian UI
+  - tidak ada bedanya pada bagian UI
 - Capture hasil praktikum Anda berupa GIF dan lampirkan di README. Lalu lakukan commit dengan pesan "W11: Soal 13".
 
 ![p7s13](./img/P7S13.gif)
+
 - Seperti yang Anda lihat, menggunakan FutureBuilder lebih efisien, clean, dan reactive dengan Future bersama UI.
 
 ## Langkah 5: Tambah handling error
@@ -647,3 +648,72 @@ Tambahkan kode berikut untuk menangani ketika terjadi error. Kemudian hot restar
 - Capture hasil praktikum Anda berupa GIF dan lampirkan di README. Lalu lakukan commit dengan pesan "W11: Soal 14".
 
 ![p7s14](./img/P7S14.gif)
+
+# Praktikum 8: Navigation route dengan Future Function
+
+## Langkah 1: Buat file baru navigation_first.dart
+
+Buatlah file baru ini di project lib Anda.
+
+## Langkah 2: Isi kode navigation_first.dart
+
+### Soal 15
+
+- Tambahkan nama panggilan Anda pada tiap properti title sebagai identitas pekerjaan Anda.
+- Silakan ganti dengan warna tema favorit Anda.
+
+```dart
+import 'package:books/navigation_second.dart';
+import 'package:flutter/material.dart';
+
+class NavigationFirst extends StatefulWidget {
+  const NavigationFirst({super.key});
+
+  @override
+  State<NavigationFirst> createState() => _NavigationFirstState();
+}
+
+class _NavigationFirstState extends State<NavigationFirst> {
+  Color color = Colors.blue.shade700;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: color,
+      appBar: AppBar(title: const Text('Navigation First Screen - Aziz')),
+      body: Center(
+        child: ElevatedButton(
+          child: const Text('Change Color'),
+          onPressed: () {
+            _navigateAndGetColor(context);
+          },
+        ),
+      ),
+    );
+  }
+}
+```
+
+## Langkah 3: Tambah method di class \_NavigationFirstState
+
+Tambahkan method ini.
+
+## Langkah 4: Buat file baru navigation_second.dart
+
+Buat file baru ini di project lib Anda. Silakan jika ingin mengelompokkan view menjadi satu folder dan sesuaikan impor yang dibutuhkan.
+
+## Langkah 6: Edit main.dart
+
+Lakukan edit properti home.
+
+`home: const NavigationFirst(),`
+
+### Soal 16
+
+- Cobalah klik setiap button, apa yang terjadi ? Mengapa demikian ?
+- Gantilah 3 warna pada langkah 5 dengan warna favorit Anda!
+- Capture hasil praktikum Anda berupa GIF dan lampirkan di README. Lalu lakukan commit dengan pesan "W11: Soal 16".
+
+![p8s16](./img/P8S16.gif)
+
+
