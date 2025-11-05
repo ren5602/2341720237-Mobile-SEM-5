@@ -645,4 +645,5 @@ Tambahkan kode berikut untuk menangani ketika terjadi error. Kemudian hot restar
 - Apakah ada perbedaan UI dengan langkah sebelumnya? Mengapa demikian?
   - tidak ada bedanya dari UI, hanya ditambahkan handling error
 - Capture hasil praktikum Anda berupa GIF dan lampirkan di README. Lalu lakukan commit dengan pesan "W11: Soal 14".
+
 ![p7s14](./img/P7S14.gif)
