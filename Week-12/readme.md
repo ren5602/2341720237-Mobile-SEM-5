@@ -517,3 +517,138 @@ Langkah 1–3 membangun pipeline untuk memproses data sebelum sampai ke listener
 ![P3S8](./img/P3S8.gif)
 
 #### Lakukan commit dengan pesan "W12: Jawaban Soal 8".
+
+# Praktikum 4: Subscribe ke stream events
+
+Dari praktikum sebelumnya, Anda telah menggunakan method listen mendapatkan nilai dari stream. Ini akan menghasilkan sebuah Subscription. Subscription berisi method yang dapat digunakan untuk melakukan listen pada suatu event dari stream secara terstruktur.
+
+Pada praktikum 4 ini, kita akan gunakan Subscription untuk menangani event dan error dengan teknik praktik baik (best practice), dan menutup Subscription tersebut.
+
+Setelah Anda menyelesaikan praktikum 3, Anda dapat melanjutkan praktikum 4 ini. Selesaikan langkah-langkah praktikum berikut ini menggunakan editor Visual Studio Code (VS Code) atau Android Studio atau code editor lain kesukaan Anda. Jawablah di laporan praktikum Anda pada setiap soal yang ada di beberapa langkah praktikum ini.
+
+## Langkah 1: Tambah variabel
+
+Tambahkan variabel berikut di class \_StreamHomePageState
+
+```dart
+  late StreamSubscription subscription;
+```
+
+## Langkah 2: Edit initState()
+
+Edit kode seperti berikut ini.
+
+```dart
+    subscription = stream.transform(transformer).listen((event) {
+      setState(() {
+        lastNumber = event;
+      });
+    });
+```
+
+## Langkah 3: Tetap di initState()
+
+Tambahkan kode berikut ini.
+
+```dart
+    subscription.onError((error) {
+      setState(() {
+        lastNumber = -1;
+      });
+    });
+```
+
+## Langkah 4: Tambah properti onDone()
+
+Tambahkan dibawahnya kode ini setelah onError
+
+```dart
+    subscription.onDone(() {
+      print('OnDone was called');
+    });
+```
+
+## Langkah 5: Tambah method baru
+
+Ketik method ini di dalam class \_StreamHomePageState
+
+```dart
+  void stopStream() {
+    numberStreamController.close();
+  }
+```
+
+## Langkah 6: Pindah ke method dispose()
+
+Jika method dispose() belum ada, Anda dapat mengetiknya dan dibuat override. Ketik kode ini didalamnya.
+
+```dart
+  @override
+  void dispose() {
+    subscription.cancel();
+    super.dispose();
+  }
+```
+
+## Langkah 7: Pindah ke method build()
+
+Tambahkan button kedua dengan isi kode seperti berikut ini.
+
+```dart
+            ElevatedButton(
+              onPressed: () => stopStream(),
+              child: const Text('Stop Subscription'),
+            ),
+```
+
+## Langkah 8: Edit method addRandomNumber()
+
+Edit kode seperti berikut ini.
+
+```dart
+  void addRandomNumber() {
+    Random random = Random();
+    int myNum = random.nextInt(10);
+    if (!numberStreamController.isClosed) {
+      numberStream.addNumberToSink(myNum);
+    } else {
+      setState(() {
+        lastNumber = -1;
+      });
+    }
+  }
+```
+
+## Langkah 9: Run
+
+Anda akan melihat dua button seperti gambar berikut.
+
+## Langkah 10: Tekan button 'Stop Subscription'
+
+Anda akan melihat pesan di Debug Console seperti berikut.
+
+## Soal 9
+
+### Jelaskan maksud kode langkah 2, 6 dan 8 tersebut!
+
+Langkah 2 (Modifikasi initState)
+Di sini subscription hasil transformasi stream disimpan dalam variabel subscription. Tidak lagi memakai rantai metode langsung. Dengan cara ini, kita bisa mengontrol aliran stream—pause, resume, atau cancel—serta menangani error secara lebih rapi. Ini praktik yang lebih aman dan terstruktur.
+
+Langkah 6 (Modifikasi dispose)
+Pada dispose(), dipanggil subscription.cancel() untuk memutus langganan stream ketika widget dihapus. Ini mencegah memory leak dan menghindari error akibat setState() dipicu setelah widget tidak lagi aktif. Hasilnya, aplikasi lebih stabil.
+
+Langkah 8 (Modifikasi addRandomNumber)
+Sebelum mengirim data, dicek dulu apakah controller belum ditutup menggunakan !numberStreamController.isClosed. Jika masih terbuka, data dikirim normal. Jika sudah tertutup, UI menampilkan –1 sebagai tanda bahwa stream sudah tidak aktif. Ini bentuk defensive programming untuk menghindari error saat menulis ke stream yang sudah closed.
+
+### Capture hasil praktikum Anda berupa GIF dan lampirkan di README.
+
+#### Hasil Subscribe stream Events
+
+![p4hasil](./img/P4Hasil.gif)
+
+#### Hasil stop Subscribe stream Events
+
+![disetop](./img/p4h.png)
+
+### Lalu lakukan commit dengan pesan "W12: Jawaban Soal 9".
+
