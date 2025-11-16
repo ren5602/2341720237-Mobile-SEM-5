@@ -236,4 +236,223 @@ listen() tidak menunggu. Ia menjalankan callback saat data muncul, sementara pro
 
 ### Lakukan commit hasil jawaban Soal 5 dengan pesan "W12: Jawaban Soal 5"
 
+# Praktikum 2: Stream controllers dan sinks
+
+StreamControllers akan membuat jembatan antara Stream dan Sink. Stream berisi data secara sekuensial yang dapat diterima oleh subscriber manapun, sedangkan Sink digunakan untuk mengisi (injeksi) data.
+
+Secara sederhana, StreamControllers merupakan stream management. Ia akan otomatis membuat stream dan sink serta beberapa method untuk melakukan kontrol terhadap event dan fitur-fitur yang ada di dalamnya.
+
+Anda dapat membayangkan stream sebagai pipa air yang mengalir searah, dari salah satu ujung Anda dapat mengisi data dan dari ujung lain data itu keluar. Anda dapat melihat konsep stream pada gambar diagram berikut ini.
+
+## Langkah 1: Buka file stream.dart
+
+Lakukan impor dengan mengetik kode ini.
+
+```dart
+import 'dart:async';
+```
+
+## Langkah 2: Tambah class NumberStream
+
+Tetap di file stream.dart tambah class baru seperti berikut.
+
+```dart
+class NumberStream {
+}
+```
+
+## Langkah 3: Tambah StreamController
+
+Di dalam class NumberStream buatlah variabel seperti berikut.
+
+```dart
+final StreamController<int> controller = StreamController<int>();
+```
+
+## Langkah 4: Tambah method addNumberToSink
+
+Tetap di class NumberStream buatlah method ini
+
+```dart
+  void addNumberToSink(int newNumber) {
+    controller.sink.add(newNumber);
+  }
+```
+
+## Langkah 5: Tambah method close()
+
+```dart
+  close() {
+    controller.close();
+  }
+```
+
+## Langkah 6: Buka main.dart
+
+Ketik kode import seperti berikut
+
+```dart
+import 'dart:async';
+import 'dart:math';
+```
+
+## Langkah 7: Tambah variabel
+
+Di dalam class \_StreamHomePageState ketik variabel berikut
+
+```dart
+  int lastNumber = 0;
+  late StreamController numberStreamController;
+  late NumberStream numberStream;
+```
+
+## Langkah 8: Edit initState()
+
+```dart
+  @override
+  void initState() {
+    numberStream = NumberStream();
+    numberStreamController = numberStream.controller;
+    Stream stream = numberStreamController.stream;
+    stream.listen((event) {
+      setState(() {
+        lastNumber = event;
+      });
+    });
+    super.initState();
+  }
+```
+
+## Langkah 9: Edit dispose()
+
+```dart
+  @override
+  void dispose() {
+    numberStreamController.close();
+    super.dispose();
+  }
+```
+
+## Langkah 10: Tambah method addRandomNumber()
+
+```dart
+void addRandomNumber() {
+  Random random = Random();
+  int myNum = random.nextInt(10);
+  numberStream.addNumberToSink(myNum);
+}
+```
+
+## Langkah 11: Edit method build()
+
+```dart
+      body: SizedBox(
+        width: double.infinity,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(lastNumber.toString()),
+            ElevatedButton(
+              onPressed: () => addRandomNumber(),
+              child: const Text('New Random Number'),
+            )
+          ],
+        ),
+      ),
+```
+
+## Langkah 12: Run
+
+Lakukan running pada aplikasi Flutter Anda, maka akan terlihat seperti gambar berikut.
+
+## Soal 6
+
+#### Jelaskan maksud kode langkah 8 dan 10 tersebut!
+
+Langkah 8 – initState
+Saat widget dibuat, fungsi ini menyiapkan aliran data. Ia membuat NumberStream, mengambil StreamController, lalu memasang listen. Setiap angka baru datang, setState dipanggil untuk memperbarui lastNumber, sehingga tampilan langsung berubah. Intinya: pasang pendengar supaya UI otomatis mengikuti data yang mengalir.
+
+Langkah 10 – addRandomNumber
+Tombol ini bertindak sebagai pengirim data. Saat ditekan, ia membuat angka acak 0–9 dan memasukkannya ke stream lewat addNumberToSink. Angka tersebut langsung diterima oleh pendengar di initState, lalu muncul di UI. Singkatnya: tekan → angka terkirim → UI langsung update.
+
+#### Capture hasil praktikum Anda berupa GIF dan lampirkan di README.
+
+![p2l2](./img/P2L2.gif)
+
+#### Lalu lakukan commit dengan pesan "W12: Jawaban Soal 6".
+
 ---
+
+## Langkah 13: Buka stream.dart
+
+Tambahkan method berikut ini.
+
+```dart
+  addError() {
+    controller.sink.addError('error');
+  }
+```
+
+## Langkah 14: Buka main.dart
+
+Tambahkan method onError di dalam class StreamHomePageState pada method listen di fungsi initState() seperti berikut ini.
+
+```dart
+  @override
+  void initState() {
+    numberStream = NumberStream();
+    numberStreamController = numberStream.controller;
+    Stream stream = numberStreamController.stream;
+    stream.listen((event) {
+      setState(() {
+        lastNumber = event;
+      });
+    }).onError((error) {
+      setState(() {
+        lastNumber = -1;
+      });
+    });
+    super.initState();
+  }
+```
+
+## Langkah 15: Edit method addRandomNumber()
+
+Lakukan comment pada dua baris kode berikut, lalu ketik kode seperti berikut ini.
+
+```dart
+  void addRandomNumber() {
+    Random random = Random();
+    // int myNum = random.nextInt(10);
+    // numberStream.addNumberToSink(myNum);
+    numberStream.addError();
+  }
+```
+
+## Soal 7
+
+### Jelaskan maksud kode langkah 13 sampai 15 tersebut!
+
+Langkah 13
+Menambahkan method addError() di NumberStream untuk memasukkan error ke dalam stream lewat controller.sink.addError(). Ini memungkinkan kita mengirim error secara sengaja untuk uji coba atau penanganan tertentu.
+
+Langkah 14
+Listener dilengkapi onError() yang akan dipanggil ketika stream mengirim error. Di sini, lastNumber diubah menjadi -1 sebagai tanda bahwa terjadi masalah, sehingga pengguna mendapat indikator visual.
+
+Langkah 15
+addRandomNumber() dimodifikasi untuk memicu error dengan memanggil numberStream.addError() sebagai pengganti mengirim angka normal, sehingga kita bisa menguji apakah sistem penanganan error berjalan benar.
+
+### Kembalikan kode seperti semula pada Langkah 15, comment addError() agar Anda dapat melanjutkan ke praktikum 3 berikutnya.
+
+```dart
+  void addRandomNumber() {
+    Random random = Random();
+    int myNum = random.nextInt(10);
+    numberStream.addNumberToSink(myNum);
+    // numberStream.addError();
+  }
+```
+
+#### Lakukan commit dengan pesan "W12: Jawaban Soal 7".
+
