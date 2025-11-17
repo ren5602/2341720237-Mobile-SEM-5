@@ -897,3 +897,164 @@ StreamBuilder membuat UI bereaksi otomatis terhadap perubahan data. Ia terhubung
 ![StreamBuilder](./img/p6hasil.gif)
 
 ### Lalu lakukan commit dengan pesan "W12: Jawaban Soal 12".
+
+# Praktikum 7: BLoC Pattern
+
+## Langkah 1: Buat Project baru
+
+Buatlah sebuah project flutter baru dengan nama bloc_random_aziz (beri nama panggilan Anda) di folder week-12/src/ repository GitHub Anda. Lalu buat file baru di folder lib dengan nama random_bloc.dart
+
+## Langkah 2: Isi kode random_bloc.dart
+
+Ketik kode impor berikut ini.
+
+```dart
+import 'dart:async';
+import 'dart:math';
+```
+
+## Langkah 3: Buat class RandomNumberBloc()
+
+```dart
+class RandomNumberBloc {}
+```
+
+## Langkah 4: Buat variabel StreamController
+
+Di dalam class RandomNumberBloc() ketik variabel berikut ini
+
+```dart
+// StreamController for input events
+final _generateRandomController = StreamController<void>();
+// StreamController for output
+final _randomNumberController = StreamController<int>();
+// Input Sink
+Sink<void> get generateRandom => _generateRandomController.sink;
+// Output Stream
+Stream<int> get randomNumber => _randomNumberController.stream;
+```
+
+## Langkah 5: Buat constructor
+
+```dart
+RandomNumberBloc() {
+  _generateRandomController.stream.listen((_) {
+    final random = Random().nextInt(10);
+    _randomNumberController.sink.add(random);
+  });
+}
+```
+
+## Langkah 6: Buat method dispose()
+
+```dart
+void dispose() {
+  _generateRandomController.close();
+  _randomNumberController.close();
+}
+```
+
+## Langkah 7: Edit main.dart
+
+```dart
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: const RandomScreen(),
+    );
+  }
+}
+```
+
+## Langkah 8: Buat file baru random_screen.dart
+
+Di dalam folder lib project Anda, buatlah file baru ini.
+
+## Langkah 9: Lakukan impor material dan random_bloc.dart
+
+Ketik kode ini di file baru random_screen.dart
+
+```dart
+import 'package:bloc_random_aziz/random_bloc.dart';
+import 'package:flutter/material.dart';
+```
+
+## Langkah 10: Buat StatefulWidget RandomScreen
+
+Buatlah di dalam file random_screen.dart
+
+## Langkah 11: Buat variabel
+
+Ketik kode ini di dalam class \_RandomScreenState
+
+```dart
+final _bloc = RandomNumberBloc();
+```
+
+## Langkah 12: Buat method dispose()
+
+Ketik kode ini di dalam class \_StreamHomePageState
+
+```dart
+@override
+void dispose() {
+  _bloc.dispose();
+  super.dispose();
+}
+```
+
+## Langkah 13: Edit method build()
+
+Ketik kode ini di dalam class \_StreamHomePageState
+
+```dart
+@override
+Widget build(BuildContext context) {
+  return Scaffold(
+    appBar: AppBar(title: const Text('Random Number')),
+    body: Center(
+      child: StreamBuilder<int>(
+        stream: _bloc.randomNumber,
+        initialData: 0,
+        builder: (context, snapshot) {
+          return Text(
+            'Random Number: ${snapshot.data}',
+            style: const TextStyle(fontSize: 24),
+          );
+        },
+      ),
+    ),
+    floatingActionButton: FloatingActionButton(
+      onPressed: () => _bloc.generateRandom.add(null),
+      child: const Icon(Icons.refresh),
+    ),
+  );
+}
+```
+
+## Soal 13
+
+### Jelaskan maksud praktikum ini ! Dimanakah letak konsep pola BLoC-nya ?
+
+Konsep BLoC dalam contoh tersebut berada pada file random_bloc.dart, yaitu:
+
+- Input (Sink): generateRandom adalah Sink<void> yang menerima event dari UI ketika tombol ditekan.
+
+- Output (Stream): randomNumber adalah Stream<int> yang mengirim angka acak hasil proses bisnis ke UI.
+
+- Proses (Transformasi): Di dalam konstruktor RandomNumberBloc, setiap event dari input diolah menjadi angka acak lalu dikirim ke output lewat _randomNumberController.
+
+Jadi, RandomNumberBloc menjadi penghubung antara UI dan logika bisnis: UI mengirim event, BLoC memprosesnya, dan UI menerima state baru melalui stream—persis seperti pola kerja BLoC.
+
+### Capture hasil praktikum Anda berupa GIF dan lampirkan di README.
+
+![bloc](./img/p7hasil.gif)
+
+### Lalu lakukan commit dengan pesan "W12: Jawaban Soal 13".
