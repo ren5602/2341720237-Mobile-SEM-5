@@ -746,3 +746,154 @@ Subscriber pertama mengolah angka (dikalikan 10) lalu menampilkannya lewat lastN
 ![Broadcast](./img/p5hasil.gif)
 
 ### Lakukan commit dengan pesan "W12: Jawaban Soal 11".
+
+# Praktikum 6: StreamBuilder
+
+StreamBuilder adalah sebuah widget untuk melakukan listen terhadap event dari stream. Ketika sebuah event terkirim, maka akan dibangun ulang semua turunannya. Seperti halnya widget FutureBuilder pada pertemuan pekan lalu, StreamBuilder berguna untuk membangun UI secara reaktif yang diperbarui setiap data baru tersedia.
+
+Setelah Anda menyelesaikan praktikum 5, Anda dapat melanjutkan praktikum 6 ini. Selesaikan langkah-langkah praktikum berikut ini menggunakan editor Visual Studio Code (VS Code) atau Android Studio atau code editor lain kesukaan Anda. Jawablah di laporan praktikum Anda pada setiap soal yang ada di beberapa langkah praktikum ini.
+
+## Langkah 1: Buat Project Baru
+
+Buatlah sebuah project flutter baru dengan nama streambuilder_aziz di folder codelab_week12
+
+## Langkah 2: Buat file baru stream.dart
+
+Ketik kode ini
+
+```dart
+import 'dart:math';
+
+class NumberStream {
+
+}
+```
+
+## Langkah 3: Tetap di file stream.dart
+
+Ketik kode seperti berikut.
+
+```dart
+  Stream<int> getNumbers() async* {
+    yield* Stream.periodic(const Duration(seconds: 1), (int t) {
+      Random random = Random();
+      int myNum = random.nextInt(10);
+      return myNum;
+    });
+  }
+```
+
+## Langkah 4: Edit main.dart
+
+Ketik kode seperti berikut ini.
+
+```dart
+import 'package:flutter/material.dart';
+import 'stream.dart';
+import 'dart:async';
+
+void main() {
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Stream',
+      theme: ThemeData(
+        primarySwatch: Colors.deepPurple,
+      ),
+      home: const StreamHomePage(),
+    );
+  }
+}
+
+class StreamHomePage extends StatefulWidget {
+  const StreamHomePage({super.key});
+
+  @override
+  State<StreamHomePage> createState() => _StreamHomePageState();
+}
+
+class _StreamHomePageState extends State<StreamHomePage> {
+  @override
+  Widget build(BuildContext context) {
+    return Container();
+  }
+}
+```
+
+## Langkah 5: Tambah variabel
+
+Di dalam class \_StreamHomePageState, ketikan variabel ini.
+
+```dart
+  late Stream<int> numberStream;
+```
+
+## Langkah 6: Edit initState()
+
+Ketik kode seperti berikut.
+
+```dart
+  @override
+  void initState() {
+    numberStream = NumberStream().getNumbers();
+    super.initState();
+  }
+```
+
+## Langkah 7: Edit method build()
+
+```dart
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Stream'),
+      ),
+      body: StreamBuilder(
+        stream: numberStream,
+        initialData: 0,
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            print('Error!');
+          }
+          if (snapshot.hasData) {
+            return Center(
+              child: Text(
+                snapshot.data.toString(),
+                style: const TextStyle(fontSize: 96),
+              ),
+            );
+          } else {
+            return const SizedBox.shrink();
+          }
+        },
+      ),
+    );
+  }
+```
+
+## Langkah 8: Run
+
+Hasilnya, setiap detik akan tampil angka baru seperti berikut.
+
+## Soal 12
+
+### Jelaskan maksud kode pada langkah 3 dan 7 !
+
+Langkah 3 – getNumbers()
+Method ini membuat stream angka yang terus mengirim nilai baru tiap 1 detik. Dengan async* dan yield* Stream.periodic(), setiap interval akan menghasilkan angka acak 0–9 dari Random(). Hasilnya, terbentuk aliran data real-time yang tidak pernah berhenti.
+
+Langkah 7 – StreamBuilder
+StreamBuilder membuat UI bereaksi otomatis terhadap perubahan data. Ia terhubung ke numberStream, lalu setiap event baru akan memicu builder. Melalui snapshot, widget bisa menampilkan angka besar, pesan error, atau tampilan kosong. Semua ini terjadi tanpa listen dan tanpa setState, sehingga logika data dan UI tetap terpisah dan kode lebih rapi.
+
+### Capture hasil praktikum Anda berupa GIF dan lampirkan di README.
+
+![StreamBuilder](./img/p6hasil.gif)
+
+### Lalu lakukan commit dengan pesan "W12: Jawaban Soal 12".
