@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:path_provider/path_provider.dart';
 
 void main() {
   runApp(const MyApp());
@@ -38,49 +39,43 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int appCounter = 0;
+  String documentPath = '';
+  String tempPath = '';
 
-  Future<void> readAndWritePreference() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    appCounter = prefs.getInt('appCounter') ?? 0;
-    appCounter++;
-    await prefs.setInt('appCounter', appCounter);
+  Future getPaths() async {
+    final docDir = await getApplicationDocumentsDirectory();
+    final tempDir = await getTemporaryDirectory();
     setState(() {
-      appCounter = appCounter;
-    });
-  }
-
-  Future<void> deletePreference() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.clear();
-    setState(() {
-      appCounter = 0;
+      documentPath = docDir.path;
+      tempPath = tempDir.path;
     });
   }
 
   @override
   void initState() {
     super.initState();
-    readAndWritePreference();
+    getPaths();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Flutter JSON Demo - aziz')),
-      body: Center(
+      appBar: AppBar(title: const Text('Path Provider - aziz')),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             Text(
-              'You have opened the app $appCounter times.',
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              'Document Path:\n$documentPath',
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontSize: 16),
             ),
-            ElevatedButton(
-              onPressed: () {
-                deletePreference();
-              },
-              child: const Text('Reset Counter'),
+            const Divider(),
+            Text(
+              'Temporary Path:\n$tempPath',
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontSize: 16),
             ),
           ],
         ),
