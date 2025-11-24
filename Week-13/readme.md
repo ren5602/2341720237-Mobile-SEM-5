@@ -1011,7 +1011,7 @@ Hubungkan method read ke tombol Read Value, perbarui myPass dan UI melalui setSt
 
 Jalankan aplikasi. Masukkan teks, simpan, lalu baca kembali. Teks tersebut seharusnya ditampilkan, menandakan data telah disimpan dan diambil dengan aman.
 
-![stored value](./img/p7s9.png)
+![stored value](./img/p7s9.jpg)
 
 ### Soal 9
 
