@@ -1,7 +1,8 @@
-import 'dart:convert';
-import './model/pizza.dart';
-
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:path_provider/path_provider.dart';
+import 'dart:io';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 void main() {
   runApp(const MyApp());
@@ -40,53 +41,68 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  List<Pizza> myPizzas = [];
-
-  String convertToJSON(List<Pizza> pizzas) {
-    return jsonEncode(pizzas.map((pizza) => pizza.toJson()).toList());
-  }
-
-  Future<List<Pizza>> readJsonFile() async {
-    String myString = await DefaultAssetBundle.of(
-      context,
-    ).loadString('assets/pizzalist.json');
-    List pizzaMapList = jsonDecode(myString);
-
-    List<Pizza> myPizzas = [];
-    for (var pizza in pizzaMapList) {
-      Pizza myPizza = Pizza.fromJson(pizza);
-      myPizzas.add(myPizza);
-    }
-
-    String json = convertToJSON(myPizzas);
-    print(json);
-    return myPizzas;
-  }
+  final pwdController = TextEditingController();
+  final storage = const FlutterSecureStorage();
+  final String myKey = "myPass";
+  String myPass = '';
 
   @override
-  void initState() {
-    super.initState();
-    readJsonFile().then((value) {
-      setState(() {
-        myPizzas = value;
-      });
-    });
+  void dispose() {
+    pwdController.dispose();
+    super.dispose();
+  }
+
+  Future<void> writeToSecureStorage() async {
+    await storage.write(key: myKey, value: pwdController.text);
+  }
+
+  Future<String> readFromSecureStorage() async {
+    return await storage.read(key: myKey) ?? "";
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Flutter JSON Demo - aziz')),
-      body: ListView.builder(
-        itemCount: myPizzas.length,
-        itemBuilder: (context, index) {
-          return ListTile(
-            title: Text(myPizzas[index].pizzaName),
-            subtitle: Text(
-              '${myPizzas[index].description} - \$${myPizzas[index].price}',
+      appBar: AppBar(title: const Text('Secure Storage - aziz')),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            TextField(
+              controller: pwdController,
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                fillColor: Colors.white,
+                filled: true,
+              ),
             ),
-          );
-        },
+            const SizedBox(height: 20),
+
+            ElevatedButton(
+              onPressed: () {
+                writeToSecureStorage();
+                pwdController.clear();
+              },
+              child: const Text('Save Value'),
+            ),
+            const SizedBox(height: 10),
+            ElevatedButton(
+              onPressed: () async {
+                String value = await readFromSecureStorage();
+                setState(() {
+                  myPass = value;
+                });
+              },
+              child: const Text('Read Value'),
+            ),
+            const SizedBox(height: 20),
+            Text(
+              "Stored Value: $myPass",
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
       ),
     );
   }

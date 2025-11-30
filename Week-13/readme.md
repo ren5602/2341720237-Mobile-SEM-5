@@ -398,3 +398,622 @@ Jalankan aplikasi. Periksa Debug Console untuk melihat List objek Pizza telah be
 ![serial json](./img/p1l26.png)
 
 ---
+
+# PRAKTIKUM 2
+
+### Langkah 1: Simulasikan Error
+
+Anggaplah Anda telah mengganti file pizzalist.json dengan data yang tidak konsisten.
+
+### Langkah 2: Lihat Error Tipe Data String ke Int
+
+Jika ID pizza di JSON dikirim sebagai String (misalnya "id": "1" di JSON) sementara model Dart mengharapkan int, Anda akan melihat runtime error.
+
+### Langkah 3: Terapkan tryParse dan Null Coalescing pada ID
+
+Di Pizza.fromJson (file pizza.dart), ganti cara mendapatkan nilai id menggunakan int.tryParse dan null coalescing operator (??) untuk memberikan nilai default 0 jika parsing gagal atau nilainya null. Tujuannya adalah memastikan nilai id selalu integer.
+
+### Langkah 4: Simulasikan Error Null pada String
+
+Jika Anda menjalankan ulang dan ada bidang yang hilang (misalnya imageUrl hilang), Anda mungkin mendapatkan error Null.
+
+### Langkah 5: Terapkan Null Coalescing pada String
+
+Tambahkan null coalescing operator (??) pada imageUrl untuk memberikan string kosong ('') jika nilai yang diterima adalah null. Lakukan hal yang sama untuk bidang String lainnya seperti pizzaName dan description jika perlu.
+
+### Langkah 6: Gunakan toString() untuk Field String
+
+Untuk memastikan semua nilai yang digunakan sebagai String benar-benar String (bahkan jika mereka mungkin dikirim sebagai int atau tipe lain), gunakan toString().
+
+### Langkah 7: Simulasikan Error Tipe Data String ke Double
+
+Jika Anda menjalankan ulang, Anda mungkin menemukan error saat mengonversi String ke Double untuk bidang price.
+
+### Langkah 8: Terapkan double.tryParse
+
+Terapkan double.tryParse dengan null coalescing (?? 0) untuk bidang price, sama seperti yang Anda lakukan pada id.
+
+### Langkah 9: Run dan Perhatikan Output Null
+
+Setelah mengimplementasikan semua perbaikan tipe data, aplikasi akan berjalan, tetapi mungkin menampilkan "null" di UI jika ada bidang yang hilang atau gagal diparsing (seperti pizzaName atau description).
+
+![TEST NULL](./img/p2l9.png)
+
+### Langkah 10: Tambahkan Operator Ternary untuk Output User-Friendly
+
+Perbaiki masalah tampilan "null" dengan menambahkan operator ternary yang memeriksa apakah nilai null sebelum mengubahnya menjadi String. Jika null, berikan nilai pengganti yang ramah pengguna seperti 'No name' atau string kosong ('').
+
+```dart
+  factory Pizza.fromJson(Map<String, dynamic> json) {
+    return Pizza(
+      id: int.tryParse(json['id'].toString()) ?? 0,
+      pizzaName: json['pizzaName'] != null ? json['pizzaName'].toString() : 'No name',
+      description: json['description'] != null ? json['description'].toString() : '',
+      price: double.tryParse(json['price'].toString()) ?? 0.0,
+      imageUrl: json['imageUrl'] != null ? json['imageUrl'].toString() : '',
+    );
+  }
+```
+
+### Langkah 11: Run
+
+Jalankan aplikasi. Sekarang data yang tidak konsisten telah ditangani dengan baik, dan UI tidak menampilkan nilai null.
+
+![tidak menampilkan null](./img/p2s4.png)
+
+### Soal 4
+
+Capture hasil running aplikasi Anda, kemudian impor ke laporan praktikum Anda!
+Lalu lakukan commit dengan pesan "W13: Jawaban Soal 4".
+
+![tidak menampilkan null](./img/p2s4.png)
+
+---
+
+# PRAKTIKUM 3
+
+### Langkah 1: Buka pizza.dart dan Buat Konstanta
+
+Di bagian atas file pizza.dart, di luar class Pizza, deklarasikan konstanta untuk setiap kunci JSON.
+
+### Langkah 2: Perbarui fromJson() menggunakan Konstanta
+
+Di constructor Pizza.fromJson, ganti semua string literal kunci JSON (misalnya 'id') dengan konstanta yang sesuai (keyId).
+
+Catatan: Konstruktor ini menggunakan sintaks inisialisasi, tetapi untuk kesederhanaan, kita menggunakan sintaks body.
+
+### Langkah 3: Perbarui toJson() menggunakan Konstanta
+
+Perbarui juga method toJson() agar menggunakan konstanta yang sama.
+
+### Langkah 4: Run
+
+Jalankan aplikasi. Tidak akan ada perubahan visual, tetapi kode Anda kini lebih safe dan maintainable.
+
+### Soal 5
+
+Jelaskan maksud kode lebih safe dan maintainable!
+
+jawab:
+
+### 1. Lebih aman jika terjadi Bug
+
+Mengurangi risiko typo
+Saat memakai string manual seperti 'pizzaName', kesalahan ketik—misalnya 'pizaName'—tidak akan terdeteksi ketika kompilasi dan baru terlihat saat aplikasi dijalankan.
+Namun dengan menggunakan konstanta, typo seperti keyNam langsung terdeteksi di editor karena akan muncul peringatan.
+
+Menjaga konsistensi kunci
+Penggunaan konstanta memastikan bahwa kunci yang dipakai di fromJson dan toJson selalu sama.
+
+### 2. Lebih Mudah untuk maintenance
+
+Perubahan cukup di satu titik
+Jika suatu kunci API berubah, misalnya dari 'pizzaName' menjadi 'name', maka:
+
+Tanpa konstanta: kita perlu menelusuri seluruh kode dan mengganti semua penggunaan 'pizzaName'.
+
+Dengan konstanta: cukup memperbarui nilai pada satu konstanta, dan seluruh bagian kode yang menggunakannya otomatis ikut menyesuaikan.
+
+#### Capture hasil praktikum Anda dan lampirkan di README.
+
+![penanganan error](./img/p3s5.png)
+
+Lalu lakukan commit dengan pesan "W13: Jawaban Soal 5".
+
+---
+
+# PRAKTIKUM 4
+
+Praktikum 4: SharedPreferences
+Praktikum ini membahas menyimpan data sederhana dengan SharedPreferences. Kita akan menggunakan shared_preferences untuk menyimpan hitungan sederhana.
+
+Setelah Anda menyelesaikan praktikum 3, Anda dapat melanjutkan praktikum 4 ini. Selesaikan langkah-langkah praktikum berikut ini menggunakan editor Visual Studio Code (VS Code) atau Android Studio atau code editor lain kesukaan Anda. Jawablah di laporan praktikum Anda pada setiap soal yang ada di beberapa langkah praktikum ini.
+
+Perhatian: Diasumsikan Anda telah berhasil menyelesaikan Praktikum 3.
+
+### Langkah 1: Tambahkan Dependensi
+
+Di Terminal, tambahkan package shared_preferences.
+
+```pub
+flutter pub add shared_preferences
+```
+
+### Langkah 2: Install Dependensi
+
+Jalankan flutter pub get jika editor Anda tidak melakukannya secara otomatis.
+
+### Langkah 3: Lakukan Import
+
+Di file main.dart, tambahkan import untuk shared_preferences.
+
+```dart
+import 'package:shared_preferences/shared_preferences.dart';
+```
+
+### Langkah 4: Tambahkan Variabel appCounter
+
+Di dalam class \_MyHomePageState (atau State class yang Anda gunakan), deklarasikan variabel appCounter.
+
+```dart
+  int appCounter = 0;
+```
+
+### Langkah 5: Buat Method readAndWritePreference
+
+Buat method asinkron readAndWritePreference().
+
+```dart
+  Future<void> readAndWritePreference() async {}
+```
+
+### Langkah 6: Dapatkan Instance SharedPreferences
+
+Di dalam method tersebut, dapatkan instance SharedPreferences. Perlu diingat bahwa ini adalah operasi asinkron, jadi gunakan await.
+
+```dart
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+```
+
+### Langkah 7: Baca, Cek Null, dan Increment Counter
+
+Baca nilai appCounter dari storage. Gunakan null coalescing (?? 0) untuk memastikan nilai default 0 jika data belum ada. Kemudian increment nilai tersebut.
+
+```dart
+    appCounter = prefs.getInt('appCounter') ?? 0;
+    appCounter++;
+```
+
+### Langkah 8: Simpan Nilai Baru
+
+Simpan nilai appCounter yang sudah di-increment kembali ke storage menggunakan prefs.setInt().
+
+```dart
+    await prefs.setInt('appCounter', appCounter);
+```
+
+### Langkah 9: Perbarui State
+
+Panggil setState() untuk memperbarui UI dengan nilai baru appCounter.
+
+```dart
+    setState(() {
+      appCounter = appCounter;
+    });
+  }
+```
+
+### Langkah 10: Panggil di initState()
+
+Panggil readAndWritePreference() di initState() agar penghitung dibaca saat aplikasi pertama kali dibuka.
+
+```dart
+  void initState() {
+    super.initState();
+    readAndWritePreference();
+  }
+```
+
+### Langkah 11: Perbarui Tampilan (body)
+
+Ganti body Scaffold Anda dengan tata letak yang menampilkan hitungan dan tombol 'Reset counter'.
+
+```dart
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Text(
+              'You have opened the app $appCounter times.',
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                deletePreference();
+              },
+              child: const Text('Reset Counter'),
+            ),
+          ],
+```
+
+### Langkah 12: Run
+
+Aplikasi sekarang akan menampilkan "You have opened the app 1 times" (jika ini pembukaan pertama).
+
+![shared preferences](./img/p4l12.png)
+
+### Langkah 13: Buat Method deletePreference()
+
+Tambahkan method asinkron deletePreference() yang berfungsi untuk menghapus data menggunakan prefs.clear().
+
+```dart
+  Future<void> deletePreference() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.clear();
+    setState(() {
+      appCounter = 0;
+    });
+  }
+```
+
+### Langkah 14: Panggil deletePreference()
+
+Hubungkan deletePreference() ke tombol 'Reset counter'.
+
+```dart
+              onPressed: () {
+                deletePreference();
+              },
+              child: const Text('Reset Counter'),
+```
+
+### Langkah 15: Run
+
+Jalankan aplikasi. Tombol reset sekarang akan berfungsi, menghapus semua pasangan kunci-nilai dan mereset hitungan.
+
+### Soal 6
+
+Capture hasil praktikum Anda berupa GIF dan lampirkan di README.
+
+![try reset](./img/p4s6.png)
+
+Lalu lakukan commit dengan pesan "W13: Jawaban Soal 6".
+
+---
+
+# PRAKTIKUM 5
+
+Praktikum 5: Akses filesystem dengan path_provider
+Praktikum ini berfokus untuk mengakses file system menggunakan path_provider untuk menemukan direktori umum (documents dan temp) pada perangkat.
+
+Setelah Anda menyelesaikan praktikum 4, Anda dapat melanjutkan praktikum 5 ini. Selesaikan langkah-langkah praktikum berikut ini menggunakan editor Visual Studio Code (VS Code) atau Android Studio atau code editor lain kesukaan Anda. Jawablah di laporan praktikum Anda pada setiap soal yang ada di beberapa langkah praktikum ini.
+
+Perhatian: Diasumsikan Anda telah berhasil menyelesaikan Praktikum 4.
+
+### Langkah 1: Tambahkan Dependensi
+
+Tambahkan package path_provider melalui Terminal.
+
+```dart
+flutter pub add path_provider
+```
+
+### Langkah 2: Lakukan Import
+
+Di file main.dart, tambahkan import untuk path_provider.
+
+```dart
+import 'package:path_provider/path_provider.dart';
+```
+
+### Langkah 3: Tambahkan Variabel Path State
+
+Di State class Anda, tambahkan variabel untuk menyimpan jalur direktori dokumen dan temporer.
+
+```dart
+  String documentPath = '';
+  String tempPath = '';
+```
+
+### Langkah 4: Buat Method getPaths()
+
+Buat method asinkron getPaths() yang menggunakan getApplicationDocumentsDirectory() dan getTemporaryDirectory() untuk mengambil jalur sistem file yang tepat, lalu perbarui state.
+
+```dart
+  Future getPaths() async {
+    final docDir = await getApplicationDocumentsDirectory();
+    final tempDir = await getTemporaryDirectory();
+    setState(() {
+      documentPath = docDir.path;
+      tempPath = tempDir.path;
+    });
+  }
+```
+
+### Langkah 5: Panggil getPaths() di initState()
+
+Panggil getPaths() di initState().
+
+```dart
+@override
+void initState() {
+  super.initState();
+  getPaths();
+}
+```
+
+### Langkah 6: Perbarui Tampilan
+
+Perbarui body Scaffold untuk menampilkan kedua jalur yang telah diambil.
+
+```dart
+Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Path Provider - aziz')),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Text(
+              'Document Path:\n$documentPath',
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontSize: 16),
+            ),
+            const Divider(),
+            Text(
+              'Temporary Path:\n$tempPath',
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontSize: 16),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+```
+
+### Langkah 7: Run
+
+Jalankan aplikasi. Anda akan melihat path absolut ke direktori dokumen dan cache aplikasi di perangkat Anda.
+
+![path provider](./img/p5s7.jpg)
+
+### Soal 7
+
+Capture hasil praktikum Anda dan lampirkan di README.
+Lalu lakukan commit dengan pesan "W13: Jawaban Soal 7".
+
+---
+
+# PRAKTIKUM 6
+
+Praktikum ini melanjutkan dari Praktikum 5, berfokus pada akses file system untuk mengakses directories, menggunakan library dart:io untuk operasi file.
+
+Setelah Anda menyelesaikan praktikum 5, Anda dapat melanjutkan praktikum 6 ini. Selesaikan langkah-langkah praktikum berikut ini menggunakan editor Visual Studio Code (VS Code) atau Android Studio atau code editor lain kesukaan Anda. Jawablah di laporan praktikum Anda pada setiap soal yang ada di beberapa langkah praktikum ini.
+
+Perhatian: Diasumsikan Anda telah berhasil menyelesaikan Praktikum 5.
+
+### Langkah 1: Lakukan Import dart:io
+
+Di file main.dart, tambahkan import untuk pustaka dart:io.
+
+```dart
+import 'dart:io';
+```
+
+### Langkah 2: Tambahkan Variabel File dan Text
+
+Di State class, tambahkan variabel myFile (dengan modifier late) dan fileText untuk menyimpan konten yang akan dibaca.
+
+```dart
+  late File myFile;
+  String fileText = '';
+```
+
+### Langkah 3: Buat Method writeFile()
+
+Buat method asinkron writeFile() yang menggunakan myFile.writeAsString() untuk menulis konten ke file. Kata ‘Margherita, Capricciosa, Napoli' silakan Anda ganti dengan Nama Lengkap dan NIM Anda.
+
+```dart
+Future<bool> writeFile() async {
+  try {
+    await myFile.writeAsString('Margherita, Capricciosa, Napoli');
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+```
+
+### Langkah 4: Inisialisasi File dan Panggil writeFile() di initState()
+
+Perbarui initState(): setelah getPaths() selesai, inisialisasi myFile dengan jalur lengkap di direktori dokumen, dan panggil writeFile().
+
+```dart
+  @override
+  void initState() {
+    super.initState();
+    readAndWritePreference();
+    getPaths().then((_) {
+      myFile = File('$documentPath/pizzas.txt');
+      writeFile();
+    });
+  }
+```
+
+### Langkah 5: Buat Method readFile()
+
+Buat method asinkron readFile() yang menggunakan myFile.readAsString() untuk membaca konten file dan memperbarui fileText melalui setState().
+
+```dart
+  Future<bool> readFile() async {
+    try {
+      String fileContent = await myFile.readAsString();
+      setState(() {
+        fileText = fileContent;
+      });
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+```
+
+### Langkah 6: Edit build() dan Tambahkan Tombol Baca
+
+Di method build(), tambahkan ElevatedButton yang memanggil readFile() dan Text yang menampilkan fileText di bawahnya.
+
+```dart
+          children: [
+            Text(
+              'Document Path:\n$documentPath',
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontSize: 14),
+            ),
+            const Divider(),
+            Text(
+              'Temporary Path:\n$tempPath',
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontSize: 14),
+            ),
+            const Divider(),
+            ElevatedButton(
+              onPressed: () => readFile(),
+              child: const Text('Read File'),
+            ),
+            Text(
+              fileText,
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.blue),
+            ),
+          ],
+```
+
+### Langkah 7: Run
+
+Jalankan aplikasi. Setelah menekan tombol 'Read File', konten yang ditulis (Margherita, Capricciosa, Napoli) akan ditampilkan atau sesuai nama dan NIM Anda.
+
+![akses file system direktori](./img/p6s8.jpg)
+
+### Soal 8
+
+Jelaskan maksud kode pada langkah 3 dan 7 !
+
+- Langkah 3 (Menyimpan data):\
+  Fungsi writeFile() digunakan untuk menyimpan teks "Margherita, Capricciosa, Napoli" ke dalam file secara asinkron.
+  Jika proses penyimpanan berhasil, fungsi akan mengembalikan true.
+  Jika terjadi kegagalan—misalnya muncul error—maka hal tersebut ditangani oleh blok catch, dan fungsi akan mengembalikan false.
+- Langkah 7 (Membaca data):\
+  Ketika pengguna menekan tombol ElevatedButton, sistem akan menjalankan
+  fungsi readFile() untuk mengambil data yang telah disimpan sebelumnya.
+  Data yang berhasil dibaca kemudian ditampilkan kembali pada antarmuka aplikasi.
+
+Capture hasil praktikum Anda berupa GIF dan lampirkan di README.
+Lalu lakukan commit dengan pesan "W13: Jawaban Soal 8".
+
+---
+
+# PRAKTIKUM 7
+
+### Langkah 1: Tambahkan Dependensi
+
+Tambahkan package flutter_secure_storage melalui Terminal.
+
+```dart
+flutter pub add flutter_secure_storage
+```
+
+### Langkah 2: Lakukan Import
+
+Di main.dart, impor package yang diperlukan.
+
+```dart
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+```
+
+### Langkah 3: Tambahkan Variabel dan Controller
+
+Di State class (\_MyHomePageState), tambahkan TextEditingController dan variabel untuk menyimpan kata sandi yang dibaca.
+
+```dart
+final pwdController = TextEditingController();
+String myPass = '';
+```
+
+### Langkah 4: Inisialisasi Secure Storage
+
+Di State class, inisialisasi FlutterSecureStorage dan tentukan kuncinya.
+
+```dart
+  final storage = const FlutterSecureStorage();
+  final String myKey = "myPass";
+```
+
+### Langkah 5: Buat Method writeToSecureStorage()
+
+Buat method asinkron untuk menulis data dari pwdController ke secure storage.
+
+```dart
+  Future<void> writeToSecureStorage() async {
+    await storage.write(key: myKey, value: pwdController.text);
+  }
+```
+
+### Langkah 6: Buat Method readFromSecureStorage()
+
+Buat method asinkron untuk membaca data dari secure storage.
+
+```dart
+  Future<String> readFromSecureStorage() async {
+    return await storage.read(key: myKey) ?? "";
+  }
+```
+
+### Langkah 7: Edit build() untuk UI dan Logic
+
+Perbarui method build() untuk menyertakan TextField dan dua ElevatedButton (Save Value dan Read Value). Hubungkan method save ke tombol Save Value.
+
+```dart
+// Di dalam body: Column children:
+TextField(
+  controller: pwdController,
+),
+ElevatedButton(child: const Text('Save Value'), onPressed: () {
+  writeToSecureStorage();
+}),
+// ...
+```
+
+### Langkah 8: Hubungkan Read ke Tombol
+
+Hubungkan method read ke tombol Read Value, perbarui myPass dan UI melalui setState().
+
+```dart
+            ElevatedButton(
+              onPressed: () {
+                writeToSecureStorage();
+                pwdController.clear();
+              },
+              child: const Text('Save Value'),
+            ),
+
+            const SizedBox(height: 10),
+
+            ElevatedButton(
+              onPressed: () async {
+                String value = await readFromSecureStorage();
+                setState(() {
+                  myPass = value;
+                });
+```
+
+### Langkah 9: Run
+
+Jalankan aplikasi. Masukkan teks, simpan, lalu baca kembali. Teks tersebut seharusnya ditampilkan, menandakan data telah disimpan dan diambil dengan aman.
+
+![stored value](./img/p7s9.jpg)
+
+### Soal 9
+
+Capture hasil praktikum Anda berupa GIF dan lampirkan di README.
+Lalu lakukan commit dengan pesan "W13: Jawaban Soal 9".
